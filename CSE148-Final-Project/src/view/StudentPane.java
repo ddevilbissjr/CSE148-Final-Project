@@ -1,39 +1,66 @@
 package view;
 
-import javafx.geometry.Insets;
+import java.util.Optional;
+
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import model.College;
 
 public class StudentPane {
-	private GridPane grid;
+	private VBox studentBox;
+	private Button insertBtn;
+	private Button searchBtn;
 
-	public StudentPane() {
-		grid = new GridPane();
-		grid.setVgap(20);
-		grid.setHgap(50);
-		grid.setPadding(new Insets(50));
-		TextField firstNameField = new TextField();
-		firstNameField.setPromptText("First Name");
-		TextField lastNameField = new TextField();
-		lastNameField.setPromptText("Last Name");
-		TextField gpaField = new TextField();
-		gpaField.setEditable(false);
+	public StudentPane(College college) {
+		studentBox = new VBox(30);
+		studentBox.setAlignment(Pos.CENTER);
+		TextField nameField = new TextField();
+		nameField.setMaxWidth(200);
 		TextField phoneField = new TextField();
-		grid.add(firstNameField, 0, 0);
-		grid.add(lastNameField, 1, 0);
-		grid.add(gpaField, 0, 1);
-		grid.add(phoneField, 1, 1);
+		phoneField.setMaxWidth(200);
 
+		HBox buttonBox = new HBox(30);
+		
+		insertBtn = new Button("INSERT");
+		insertBtn.setOnAction(e -> {
+			String name = nameField.getText();
+			String phone = phoneField.getText();
+//			college.getPersonBag().insert(name, phone);
+		});
+		
+
+		searchBtn = new Button("SEARCH");
+		searchBtn.setOnAction(e -> {
+
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("ID NUMBER");
+			dialog.setContentText("Please enter a student ID");
+			dialog.setHeaderText("Student ID Please");
+			Optional<String> result = dialog.showAndWait();
+			result.ifPresent(idNumber -> {
+				System.out.println(idNumber);
+
+			});
+
+			String name = nameField.getText();
+			String phone = phoneField.getText();
+//			college.getPersonBag().insert(name, phone);
+		});
+		
+		buttonBox.getChildren().addAll(insertBtn, searchBtn);
+		buttonBox.setAlignment(Pos.CENTER);
+		studentBox.getChildren().addAll(nameField, phoneField, buttonBox);
 	}
 
-	public GridPane getGrid() {
-		return grid;
+	public VBox getStudentBox() {
+		return studentBox;
 	}
 
-	public void setGrid(GridPane grid) {
-		this.grid = grid;
+	public Button getOkBtn() {
+		return insertBtn;
 	}
-	
-	
-
 }

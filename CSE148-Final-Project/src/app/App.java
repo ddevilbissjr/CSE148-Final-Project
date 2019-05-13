@@ -1,5 +1,6 @@
 package app;
 
+import config.BagConfigurations;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 import model.College;
 import utils.Utils;
 import view.BottomPane;
+import view.MenuBarPane;
 import view.StudentPane;
 
 public class App extends Application {
@@ -25,38 +27,17 @@ public class App extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		College college = new College(2020, 1000, 2000, 200);
-		Utils.restore(college);	
+		final int MAX_PERSONS = BagConfigurations.MAXPERSONS;
+		final int MAX_TEXTBOOKS = BagConfigurations.MAXBOOKS;
+		final int MAX_ROOMS = BagConfigurations.MAXROOMS;
+		final int MAX_COURSES = BagConfigurations.MAXCOURSES;
+		
+		College college = new College(MAX_PERSONS, MAX_TEXTBOOKS, MAX_ROOMS, MAX_COURSES);
+		Utils.restore(college);
 		BorderPane root = new BorderPane();
-		BottomPane bottomPane = new BottomPane();
-		root.setBottom(bottomPane.getBtnBox());
-		Button studentBtn = bottomPane.getStudentBtn();
-		
-		studentBtn.setOnAction(e -> {
-			root.setCenter(new StudentPane().getGrid());
-		});
-		
-		VBox centerBox = new VBox(20);
-		TextField titleField = new TextField();
-		TextField isbnField = new TextField();
-		TextField priceField = new TextField();
-		centerBox.getChildren().addAll(titleField, isbnField, priceField);
-		
-//		addButton.setOnAction(e -> {
-//			String title = titleField.getText();
-//			String isbn = isbnField.getText();
-//			double price = Double.parseDouble(priceField.getText());
-//			textbookBag.insert(title, isbn, price);
-//		});
-		
-//		root.setTop(restoreButton);
-//		root.setBottom(backupButton);
-//		root.setRight(addButton);
-//		root.setLeft(removeButton);
-		root.setCenter(centerBox);
+		root.setTop(new MenuBarPane(college, root).getMenuBar());
 		Scene scene = new Scene(root, 700, 500);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("College Management System");
 		primaryStage.show();
 	}
 
