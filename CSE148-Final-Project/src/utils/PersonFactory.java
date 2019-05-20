@@ -5,6 +5,7 @@ import java.util.Random;
 import model.Course;
 import model.Faculty;
 import model.LetterGrade;
+import model.Major;
 import model.MiniFacultyCourseBag;
 import model.MiniFacultyCourseInfo;
 import model.MiniStudentCourseBag;
@@ -40,10 +41,14 @@ public class PersonFactory {
 			for(int i = 0; i < howMany; i++) {
 				createStudent();
 			}
-		} else {
+		} else if (type.equals("Faculty")) {
 			for(int i = 0; i < howMany; i++) {
 				createFaculty();
 			}
+		} else if (type.equals("dontcreate")) {
+			System.out.println("Didn't create :)");
+		} else {
+			System.out.println("tf. " + type.toString());
 		}
 	}
 	
@@ -74,6 +79,57 @@ public class PersonFactory {
 		
 		student.setCurrentMajor(StudentFactory.createMajor());
 		student.setGpa(StudentFactory.createGpa());
+		student.setMiniStudentCourseBag(miniBag);
+		
+		bag.getPersonArray()[bag.getnElems()] = student;
+		
+		System.out.println(student.getId());
+		
+		if(bag.getnElems() < bag.getPersonArray().length - 1) {
+			bag.setnElems(bag.getnElems()+1);
+		}
+	}
+	
+	public static void createStudent (String name, String id, Major major, int numOfClasses) {
+		createPeople("dontcreate", 1);
+		
+		Student student = new Student();
+		MiniStudentCourseBag miniBag = new MiniStudentCourseBag();
+		
+		if(name.equals("-1")) {
+			student.setFirstName(NameFactory.getNewFirstName());
+			student.setLastName(NameFactory.getNewLastName());
+		} else {
+			String[] split = name.split(" ");
+			student.setFirstName(split[0]);
+			student.setLastName(split[1]);
+		}
+		
+		if(id.equals("-1")) {
+			student.setId(createUniqueID().trim());
+			System.out.println(student.getId());
+		} else {
+			student.setId(id);
+		}
+		
+		student.setCurrentMajor(major);
+		student.setGpa(StudentFactory.createGpa());
+		
+		MiniStudentCourseInfo[] infos = new MiniStudentCourseInfo[numOfClasses];
+		miniBag.setMiniStudentInfo(infos);
+		
+		for(int i = 0; i < numOfClasses; i++) {
+			Course course = CourseFactory.courses.get(rand.nextInt(CourseFactory.courses.size()-1));
+			MiniStudentCourseInfo info = new MiniStudentCourseInfo();
+			
+			info.setCourseNumber(course.getCourseNumber());
+			info.setCurrentLetterGrade(LetterGrade.values()[rand.nextInt(LetterGrade.values().length-1)]);
+			info.setNumberOfCredits(course.getNumberOfCredits());
+			info.setCurrentCourseStatus(StudentFactory.getCourseStatus());
+			
+			infos[i] = info;
+		}
+		
 		student.setMiniStudentCourseBag(miniBag);
 		
 		bag.getPersonArray()[bag.getnElems()] = student;
@@ -153,21 +209,17 @@ public class PersonFactory {
 	}
 	
 	public static Person getPersonByName (String name) {
-		for(int i = 0; i < bag.getPersonArray().length - 2; i++) {
-			Person p = bag.getPersonArray()[i];
-			
-			if(p.getFirstName().equals(name)) {
+		for(Person p : bag.getPersonArray()) {
+			if(name.equals(p.getFirstName() + " " + p.getLastName())) {
 				return p;
 			}
 		}
 		return null;
 	}
 	
-	public static Person getPersonByID (int ID) {
-		for(int i = 0; i < bag.getPersonArray().length - 2; i++) {
-			Person p = bag.getPersonArray()[i];
-			
-			if(Integer.parseInt(p.getId()) == ID) {
+	public static Person getPersonByID (String ID) {
+		for(Person p : bag.getPersonArray()) {
+			if(p.getId().equals(ID)) {
 				return p;
 			}
 		}
@@ -175,15 +227,16 @@ public class PersonFactory {
 	}
 
 	public static void deleteByID(String id) {
-		Person[] anotherArray = new Person[bag.getPersonArray().length - 1]; 
+		Person[] anotherArray = new Person[bag.getPersonArray().length]; 
         
         for (int i = 0, k = 0; i < bag.getPersonArray().length; i++) {
   
-            if (bag.getPersonArray()[i].toString().equals(id)) {
+            if (bag.getPersonArray()[i].getId().equals(id)) {
+            	System.out.println("found");
                 continue;
             }
             
-            anotherArray[k++] = bag.getPersonArray()[i]; 
+            anotherArray[k++] = bag.getPersonArray()[i];
         }
         
         bag.setPersonArray(anotherArray);

@@ -31,7 +31,7 @@ public class Demo {
 		CourseFactory.deleteByCourseNumber("XMB111");
 		
 		PersonFactory.createPeople("Student", 2000);
-		Student stu = (Student) PersonFactory.getPersonByID(696);
+		Student stu = (Student) PersonFactory.getPersonByID("696");
 		
 		System.out.println("#" + stu.getId() + ": ");
 		System.out.println("	" + stu.getFirstName() + " " + stu.getLastName());
@@ -40,7 +40,7 @@ public class Demo {
 		System.out.println("	" + stu.getMiniStudentCourseBag().toString());
 		
 		PersonFactory.createPeople("Faculty", 500);
-		Faculty fac = (Faculty) PersonFactory.getPersonByID(2345);
+		Faculty fac = (Faculty) PersonFactory.getPersonByID("2345");
 		
 		System.out.println("#" + fac.getId() + ": ");
 		System.out.println("	" + fac.getFirstName() + " " + fac.getLastName());
