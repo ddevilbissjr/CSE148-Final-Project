@@ -1,6 +1,8 @@
 package model;
 
-public class CourseBag {
+import java.io.Serializable;
+
+public class CourseBag implements Serializable {
 	private Course[] courseArray = new Course[1000];
 	private int nElems;
 	

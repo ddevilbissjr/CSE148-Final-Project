@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
+
 import utils.Chargeable;
 
-public abstract class Person implements Chargeable {
+public abstract class Person implements Chargeable, Serializable {
 	private String firstName; 
 	private String lastname; 
 	private String id;

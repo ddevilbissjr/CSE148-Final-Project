@@ -17,10 +17,10 @@ import model.Person;
 import model.Student;
 import utils.PersonFactory;
 
-public class StudentPane {
+public class ClassroomPane {
 	public GridPane pane;
 
-	public StudentPane(String action, Object... args) {
+	public ClassroomPane(String action, Object... args) {
 		if(action.equals("Insert")) {
 			insertAction();
 		}
@@ -72,7 +72,7 @@ public class StudentPane {
 			PersonFactory.createStudent(
 					randName.isSelected() ? "-1" : nameField.getText(),
 					randID.isSelected() ? "-1" : idField.getText(), 
-					(Major)majorField.getValue(),
+					(Major)majorField.getValue(), 
 					Integer.parseInt(numOfClassesField.getValue().toString())
 			);
 		});

@@ -1,6 +1,8 @@
 package model;
 
-public class MiniStudentCourseBag {
+import java.io.Serializable;
+
+public class MiniStudentCourseBag implements Serializable {
 	private MiniStudentCourseInfo[] miniStudentInfo;
 	private int nElems;
 	

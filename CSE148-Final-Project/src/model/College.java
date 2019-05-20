@@ -1,12 +1,14 @@
 package model;
 
+import java.io.Serializable;
+
 import utils.ClassroomFactory;
 import utils.CourseFactory;
 import utils.NameFactory;
 import utils.PersonFactory;
 import utils.TextbookFactory;
 
-public class College {
+public class College implements Serializable {
 	private PersonBag personBag;
 	private TextbookBag textbookBag;
 	private CourseBag courseBag;

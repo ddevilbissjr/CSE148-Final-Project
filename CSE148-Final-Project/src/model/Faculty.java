@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import utils.Chargeable;
 
-public class Faculty extends Person implements Chargeable {
+public class Faculty extends Person implements Chargeable, Serializable {
 	
 	private double salary;
 	private String officePhone;

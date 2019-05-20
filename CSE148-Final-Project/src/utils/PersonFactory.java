@@ -3,6 +3,7 @@ package utils;
 import java.util.Random;
 
 import model.Course;
+import model.Department;
 import model.Faculty;
 import model.LetterGrade;
 import model.Major;
@@ -13,6 +14,7 @@ import model.MiniStudentCourseInfo;
 import model.Person;
 import model.PersonBag;
 import model.Student;
+import model.Title;
 
 public class PersonFactory {
 	
@@ -46,7 +48,7 @@ public class PersonFactory {
 				createFaculty();
 			}
 		} else if (type.equals("dontcreate")) {
-			System.out.println("Didn't create :)");
+			System.out.println("Didn't create.");
 		} else {
 			System.out.println("tf. " + type.toString());
 		}
@@ -83,8 +85,6 @@ public class PersonFactory {
 		
 		bag.getPersonArray()[bag.getnElems()] = student;
 		
-		System.out.println(student.getId());
-		
 		if(bag.getnElems() < bag.getPersonArray().length - 1) {
 			bag.setnElems(bag.getnElems()+1);
 		}
@@ -112,9 +112,6 @@ public class PersonFactory {
 			student.setId(id);
 		}
 		
-		student.setCurrentMajor(major);
-		student.setGpa(StudentFactory.createGpa());
-		
 		MiniStudentCourseInfo[] infos = new MiniStudentCourseInfo[numOfClasses];
 		miniBag.setMiniStudentInfo(infos);
 		
@@ -130,6 +127,8 @@ public class PersonFactory {
 			infos[i] = info;
 		}
 		
+		student.setCurrentMajor(major);
+		student.setGpa(StudentFactory.createGpa());
 		student.setMiniStudentCourseBag(miniBag);
 		
 		bag.getPersonArray()[bag.getnElems()] = student;
@@ -142,6 +141,64 @@ public class PersonFactory {
 	public static void createFaculty () {
 		Faculty faculty = new Faculty();
 		MiniFacultyCourseBag miniBag = new MiniFacultyCourseBag();
+		
+		faculty.setFirstName(NameFactory.getNewFirstName());
+		faculty.setLastName(NameFactory.getNewLastName());
+		faculty.setId(createUniqueID().trim());
+		
+		int courses = rand.nextInt(2) + 1; // minimum 1, max 3
+		
+		MiniFacultyCourseInfo[] infos = new MiniFacultyCourseInfo[courses];
+		miniBag.setMiniFacultyCourseInfo(infos);
+		
+		for(int i = 0; i < courses; i++) {
+			Course course = CourseFactory.courses.get(rand.nextInt(CourseFactory.courses.size()-1));
+			MiniFacultyCourseInfo info = new MiniFacultyCourseInfo();
+			
+			info.setCourseNumber(course.getCourseNumber());
+			info.setCourseTitle(course.getCourseTitle());
+			info.setNumberOfCredits(course.getNumberOfCredits());
+			info.setCurrentCourseStatus(FacultyFactory.getCourseStatus());
+			
+			infos[i] = info;
+		}
+		
+		faculty.setCurrentTitle(FacultyFactory.createTitle());
+		faculty.setCurrentDepartment(FacultyFactory.createDepartment());
+		faculty.setOfficePhone(FacultyFactory.createPhone());
+		faculty.setSalary(FacultyFactory.createSalary());
+		faculty.setMiniFacultyCourseBag(miniBag);
+		
+		System.out.println(faculty.getId());
+		
+		bag.getPersonArray()[bag.getnElems()] = faculty;
+		
+		if(bag.getnElems() < bag.getPersonArray().length - 1) {
+			bag.setnElems(bag.getnElems()+1);
+		}
+	}
+	
+	public static void createFaculty (String name, String id, Title title, Department department, String phoneNum, double salary) {
+		createPeople("dontcreate", 1);
+		
+		Faculty faculty = new Faculty();
+		MiniFacultyCourseBag miniBag = new MiniFacultyCourseBag();
+		
+		if(name.equals("-1")) {
+			faculty.setFirstName(NameFactory.getNewFirstName());
+			faculty.setLastName(NameFactory.getNewLastName());
+		} else {
+			String[] split = name.split(" ");
+			faculty.setFirstName(split[0]);
+			faculty.setLastName(split[1]);
+		}
+		
+		if(id.equals("-1")) {
+			faculty.setId(createUniqueID().trim());
+			System.out.println(faculty.getId());
+		} else {
+			faculty.setId(id);
+		}
 		
 		faculty.setFirstName(NameFactory.getNewFirstName());
 		faculty.setLastName(NameFactory.getNewLastName());

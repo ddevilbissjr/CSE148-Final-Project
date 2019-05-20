@@ -1,6 +1,8 @@
 package model;
 
-public class MiniStudentCourseInfo {
+import java.io.Serializable;
+
+public class MiniStudentCourseInfo implements Serializable {
 	
 	private String courseNumber;
 	private double numberOfCredits;

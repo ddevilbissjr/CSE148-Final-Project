@@ -11,16 +11,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import model.Department;
+import model.Faculty;
 import model.Major;
 import model.MiniStudentCourseInfo;
 import model.Person;
 import model.Student;
+import model.Title;
 import utils.PersonFactory;
 
-public class StudentPane {
+public class FacultyPane {
 	public GridPane pane;
 
-	public StudentPane(String action, Object... args) {
+	public FacultyPane(String action, Object... args) {
 		if(action.equals("Insert")) {
 			insertAction();
 		}
@@ -56,27 +59,40 @@ public class StudentPane {
 		CheckBox randID = new CheckBox("Use random ID?");
 		pane.add(randID, 1, 3);
 		
-		Text major = new Text("Major: ");
-		ComboBox majorField = new ComboBox(FXCollections.observableArrayList(Major.values()));
-		pane.add(major, 0, 4);
-		pane.add(majorField, 1, 4);
+		Text title = new Text("Title: ");
+		ComboBox titleField = new ComboBox(FXCollections.observableArrayList(Title.values()));
+		pane.add(title, 0, 4);
+		pane.add(titleField, 1, 4);
 		
-		Text numOfClasses = new Text("How many classes: ");
-		String[] num = {"3", "4", "5", "6"};
-		ComboBox numOfClassesField = new ComboBox(FXCollections.observableArrayList(num));
-		pane.add(numOfClasses, 0, 5);
-		pane.add(numOfClassesField, 1, 5);
+		Text department = new Text("Department: ");
+		ComboBox departmentField = new ComboBox(FXCollections.observableArrayList(Department.values()));
+		pane.add(department, 0, 5);
+		pane.add(departmentField, 1, 5);
+		
+		Text phone = new Text("Phone Number: ");
+		TextField phoneField = new TextField();
+		phoneField.setMaxWidth(200);
+		pane.add(phone, 0, 6);
+		pane.add(phoneField, 1, 6);
+		
+		Text salary = new Text("Salary: ");
+		TextField salaryField = new TextField();
+		salaryField.setMaxWidth(200);
+		pane.add(salary, 0, 7);
+		pane.add(salaryField, 1, 7);
 		
 		Button insertBtn = new Button("INSERT");
 		insertBtn.setOnAction(e -> {
-			PersonFactory.createStudent(
+			PersonFactory.createFaculty(
 					randName.isSelected() ? "-1" : nameField.getText(),
 					randID.isSelected() ? "-1" : idField.getText(), 
-					(Major)majorField.getValue(),
-					Integer.parseInt(numOfClassesField.getValue().toString())
+					(Title)titleField.getValue(),
+					(Department)departmentField.getValue(),
+					phoneField.getText(),
+					Double.parseDouble(salaryField.getText())
 			);
 		});
-		pane.add(insertBtn, 1, 6);
+		pane.add(insertBtn, 1, 8);
 	}
 	
 	private void searchAction (BorderPane args) {
@@ -93,7 +109,6 @@ public class StudentPane {
 		
 		Button searchBtn = new Button("SEARCH");
 		searchBtn.setOnAction(e -> {
-			
 			searchResult(PersonFactory.getPersonByID(idField.getText()), args);
 		});
 		pane.add(searchBtn, 1, 1);
@@ -118,39 +133,41 @@ public class StudentPane {
 		pane.add(idTitle, 0, 2);
 		pane.add(id, 2, 2);
 		
-		Student s = (Student)person;
+		Faculty f = (Faculty)person;
 		
-		Text majorText = new Text("Major:");
-		TextField major = new TextField(s.getCurrentMajor().toString());
+		Text majorText = new Text("Title:");
+		TextField major = new TextField(f.getCurrentTitle().toString());
 		pane.add(majorText, 0, 3);
 		pane.add(major, 2, 3);
 		
 		Text gpaTitle = new Text("GPA:");
-		Text gpa = new Text("" + s.getGpa());
+		TextField gpa = new TextField(f.getCurrentDepartment().toString());
 		pane.add(gpaTitle, 0, 4);
 		pane.add(gpa, 2, 4);
 		
-		int count = 5;
-		Text coursesTitle = new Text("Courses:");
-		pane.add(coursesTitle, 0, count);
-		for(MiniStudentCourseInfo i : s.getMiniStudentCourseBag().getMiniStudentInfo()) {
-			Text course = new Text(
-				"[" + i.getCourseNumber() + ": " + i.getNumberOfCredits() + ", " + i.getCurrentLetterGrade().toString() + ", " + i.getCurrentCourseStatus().toString() + "]"
-			);
-			pane.add(course, 2, count);
-			count++;
-		}
+		Text phone = new Text("Phone Number:");
+		TextField phoneField = new TextField(f.getOfficePhone());
+		pane.add(phone, 0, 5);
+		pane.add(phoneField, 2, 5);
+		
+		Text salary = new Text("Salary:");
+		TextField salaryField = new TextField("" + f.getSalary());
+		pane.add(salary, 0, 6);
+		pane.add(salaryField, 2, 6);
 	
 		Button updateBtn = new Button("UPDATE");
 		updateBtn.setOnAction(e -> {
 			String[] split = name.getText().split(" ");
-			s.setFirstName(split[0]);
-			s.setLastName(split[1]);
+			f.setFirstName(split[0]);
+			f.setLastName(split[1]);
 			
-			s.setId(id.getText());
-			s.setCurrentMajor(Major.valueOf(major.getText()));
+			f.setId(id.getText());
+			f.setCurrentTitle(Title.valueOf(title.getText()));
+			f.setCurrentDepartment(Department.valueOf(gpa.getText()));
+			f.setOfficePhone(phoneField.getText());
+			f.setSalary(Double.parseDouble(salary.getText()));
 		});
-		pane.add(updateBtn, 2, count);
+		pane.add(updateBtn, 2, 7);
 		
 		args.setCenter(pane);
 	}
@@ -197,26 +214,5 @@ public class StudentPane {
 			result.ifPresent(idNumber -> {
 				PersonFactory.deleteByID((String) args);
 			});
-		
-		TableColumn<Student, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setMinWidth(200);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        //Price column
-        TableColumn<Student, Double> priceColumn = new TableColumn<>("Price");
-        priceColumn.setMinWidth(100);
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        //Quantity column
-        TableColumn<Student, String> quantityColumn = new TableColumn<>("Quantity");
-        quantityColumn.setMinWidth(100);
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-
-        table = new TableView<>();
-        table.setItems(getProduct());
-        table.getColumns().addAll(nameColumn, priceColumn, quantityColumn);
-
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(table);
-	 */
+	*/
 }

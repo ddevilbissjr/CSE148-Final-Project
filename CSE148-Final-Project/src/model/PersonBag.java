@@ -1,6 +1,8 @@
 package model;
 
-public class PersonBag {
+import java.io.Serializable;
+
+public class PersonBag implements Serializable {
 	private Person[] personArray;
 	private int nElems;
 	

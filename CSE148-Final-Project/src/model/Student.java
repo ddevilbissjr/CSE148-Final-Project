@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
+
 import utils.Chargeable;
 
-public class Student extends Person implements Chargeable {
+public class Student extends Person implements Chargeable, Serializable {
 	
 	private Major major;
 

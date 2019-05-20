@@ -1,6 +1,8 @@
 package model;
 
-public class TextbookBag {
+import java.io.Serializable;
+
+public class TextbookBag implements Serializable {
 	private Textbook[] textbookArray = new Textbook[50];
 	private int nElems;
 	public Textbook[] getTextbookArray() {

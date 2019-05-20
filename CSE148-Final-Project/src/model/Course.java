@@ -1,6 +1,8 @@
 package model;
 
-public class Course {
+import java.io.Serializable;
+
+public class Course implements Serializable {
 	private String courseNumber;
 	private String courseTitle;
 	private String courseDescription;
